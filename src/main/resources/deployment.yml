@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: deployment-test
+  namespace: default
+  labels:
+    app: deployment-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-test
+  template:
+    metadata:
+      labels:
+        app: deployment-test
+    spec:
+      containers:
+        - name: deployment-test
+          image: "docker-boot:1.0"
+          volumeMounts:
+            - name: config-vol
+              mountPath: /app-config
+          resources: {}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: config-vol
+          configMap:
+            name: app-1-test
+            items:
+              - key: config.json
+                path: config.json
+      restartPolicy: Always
